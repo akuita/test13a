@@ -14,7 +14,7 @@ export class EmployeesController {
   @UseGuards(AuthGuard)
   async getLoggedInEmployeeInfo(@Req() req, @Res() res) {
     try {
-      const employeeInfo = await this.employeeService.getLoggedInEmployeeInfo();
+      const employeeInfo = await this.employeeService.getLoggedInEmployeeInfo(req.user);
       if (!employeeInfo) {
         return res.status(HttpStatus.NOT_FOUND).json({ message: 'Employee ID does not exist.' });
       }

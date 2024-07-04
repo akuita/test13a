@@ -26,6 +26,6 @@ export class Employee {
 
   attendance_records: AttendanceRecord[];
 
-  @OneToMany(() => AttendanceRecord, attendanceRecord => attendanceRecord.employee)
+  @OneToMany(() => AttendanceRecord, (attendanceRecord) => attendanceRecord.employee)
   // Existing relationship mapping if any
 }

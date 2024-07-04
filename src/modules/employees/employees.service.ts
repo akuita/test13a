@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Employee } from 'src/entities/employees';
+import { Employee } from '../../entities/employees';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { BaseRepository } from 'src/shared/base.repository';
-import { QueryOperator } from 'src/shared/query-operator.enum';
+import { QueryOperator } from '../../shared/query-operator.enum';
 
 @Injectable()
 export class EmployeeService {
@@ -12,18 +12,18 @@ export class EmployeeService {
     private employeeRepository: BaseRepository<Employee>,
   ) {}
 
-  getIdFromContext(@CurrentUser() employee: Employee) {
-    if (!employee || !employee.employee_id) {
+  getIdFromContext(@CurrentUser() currentEmployee: Employee) {
+    if (!currentEmployee || !currentEmployee.id) {
       throw new Error('No employee context available');
     }
-    return employee.employee_id;
+    return currentEmployee.id;
   }
 
   async getLoggedInEmployeeInfo(@CurrentUser() employee: Employee) {
-    const loggedInEmployeeId = this.getIdFromContext(employee); // Modified to use the new method
-    const employee = await this.employeeRepository.getOne({
-      conditions: [{ column: 'id', value: loggedInEmployeeId, operator: QueryOperator.EQUAL }],
+    const loggedInEmployeeId = this.getIdFromContext(employee);
+    const loggedInEmployee = await this.employeeRepository.getOne({
+      conditions: [{ column: 'id', value: loggedInEmployeeId, operator: QueryOperator.EQUAL, whereType: 'AND' }],
     });
-    return { name: employee.name, role: employee.role };
+    return { name: loggedInEmployee.name, role: loggedInEmployee.role };
   }
 }

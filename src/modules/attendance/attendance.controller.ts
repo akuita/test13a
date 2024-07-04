@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AttendanceService } from './attendance.service';
-import { EmployeeRepository } from 'src/repositories/employee.repository';
+import { EmployeeRepository } from '../../repositories/employee.repository';
 import { Employee } from 'src/entities/employees';
 import { ErrorUtil } from 'src/shared/utils/error.util';
 
