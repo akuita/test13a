@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from '../../entities/employees';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
-import { BaseRepository } from '../../shared/base.repository';
-import { QueryOperator, QueryWhereType } from '../../shared/query-operator.enum';
+import { QueryOperator, QueryWhereType } from '../../query-operator.enum';
 
 @Injectable()
 export class EmployeeService {
