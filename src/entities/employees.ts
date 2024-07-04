@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { AttendanceRecord } from './attendance_records';
+import { AttendanceRecord } from './attendance_records'; // This import fixes the error
 
 @Entity()
 export class Employee {
@@ -23,6 +23,8 @@ export class Employee {
 
   @Column({ type: 'varchar', length: 50 })
   status: string;
+
+  attendance_records: AttendanceRecord[];
 
   @OneToMany(() => AttendanceRecord, attendanceRecord => attendanceRecord.employee)
   // Existing relationship mapping if any

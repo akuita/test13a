@@ -1,6 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AttendanceService } from './attendance.service';
+import { EmployeeRepository } from 'src/repositories/employee.repository';
 import { Employee } from 'src/entities/employees';
 import { ErrorUtil } from 'src/shared/utils/error.util';
 
@@ -8,6 +9,7 @@ import { ErrorUtil } from 'src/shared/utils/error.util';
 export class AttendanceController {
   constructor(
     private readonly attendanceService: AttendanceService,
+    private readonly employeeRepository: EmployeeRepository,
     private readonly errorUtil: ErrorUtil,
   ) {}
 
@@ -23,8 +25,8 @@ export class AttendanceController {
       };
     }
 
-    // Check if employee exists
-    const employee = await Employee.findOne(body.employee_id);
+    // Check if employee exists using EmployeeRepository
+    const employee = await this.employeeRepository.findOne({ where: { id: body.employee_id } });
     if (!employee) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,

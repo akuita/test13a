@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EmailService } from 'src/shared/email/email.service';
 import { Employee } from 'src/entities/employees';
 import { Repository } from 'typeorm';
 import { AttendanceRecord } from 'src/entities/attendance_records';
@@ -10,6 +11,7 @@ export class AttendanceService {
   constructor(
     @InjectRepository(AttendanceRecord)
     private attendanceRepository: Repository<AttendanceRecord>,
+    private emailService: EmailService
   ) {}
 
   async processCheckInError(employeeId: number): Promise<any> {
@@ -21,7 +23,7 @@ export class AttendanceService {
       };
     }
 
-    const errorResponse = await new ErrorUtil().handleCheckInError(employeeId);
+    const errorResponse = await new ErrorUtil(this.emailService).handleCheckInError(employeeId);
     return {
       status: errorResponse.statusCode,
       error_message: errorResponse.message,
