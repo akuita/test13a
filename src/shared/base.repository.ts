@@ -9,6 +9,7 @@ import {
 } from 'typeorm'
 import { NotFoundException } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
+import { SystemLog } from 'src/entities/system_logs'
 import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from '@constants/index'
 
 type ClassType<T> = {
@@ -406,5 +407,17 @@ export class BaseRepository<T> extends Repository<T> {
 
   private _toBindingArray(name: string) {
     return `:...${name}`
+  }
+
+  public async logSystemError(employee_id: number, action: string = 'check-in failed'): Promise<void> {
+    try {
+      const systemLog = new SystemLog();
+      systemLog.timestamp = new Date();
+      systemLog.employee_id = employee_id;
+      systemLog.action = action;
+      await this.save(systemLog);
+    } catch (error) {
+      console.error('Failed to log system error:', error);
+    }
   }
 }
