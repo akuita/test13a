@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { formatDateTime } from 'src/utils/transform';
+import { format } from 'date-fns';
 
 @Injectable()
 export class HealthCheckService {
   getCurrentDateTime(): string {
     const now = new Date();
-    return formatDateTime(now);
+    return format(now, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
   }
 }
