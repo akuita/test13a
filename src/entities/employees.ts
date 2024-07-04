@@ -24,8 +24,8 @@ export class Employee {
   @Column({ type: 'varchar', length: 50 })
   status: string;
 
+  @OneToMany(() => AttendanceRecord, attendanceRecord => attendanceRecord.employee)
   attendance_records: AttendanceRecord[];
 
-  @OneToMany(() => AttendanceRecord, (attendanceRecord) => attendanceRecord.employee)
   // Existing relationship mapping if any
 }

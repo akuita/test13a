@@ -1,5 +1,5 @@
 import { IsInt, IsNotEmpty, Validate } from 'class-validator';
-import { EmployeeExists } from '../../shared/validators/employee-exists.validator';
+import { EmployeeExists } from '../../../shared/validators/employee-exists.validator';
 
 export class HandleCheckInErrorDto {
   @IsNotEmpty({ message: 'Employee ID must not be empty.' })
