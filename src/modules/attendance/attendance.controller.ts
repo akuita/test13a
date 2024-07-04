@@ -1,27 +1,48 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AttendanceService } from './attendance.service';
+import { Employee } from 'src/entities/employees';
+import { ErrorUtil } from 'src/shared/utils/error.util';
 
 @Controller('api/attendance')
 export class AttendanceController {
-  constructor(private readonly attendanceService: AttendanceService) {}
+  constructor(
+    private readonly attendanceService: AttendanceService,
+    private readonly errorUtil: ErrorUtil,
+  ) {}
 
-  @Post('/check-in')
+  @Post('check-in/error')
   @UseGuards(AuthGuard)
-  async checkIn(@Body('employee_id') employeeId: number) {
-    const result = await this.attendanceService.processCheckIn(employeeId);
-    if (result.message === 'Check-in successful') {
+  @HttpCode(HttpStatus.OK)
+  async handleCheckInError(@Body() body: { employee_id: number }): Promise<any> {
+    // Validate employee_id
+    if (!Number.isInteger(body.employee_id)) {
       return {
-        status: 200,
-        message: result.message,
-        visual_indicator: "Lorem Ipsum is simply dummy text."
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Invalid employee ID.',
       };
-    } else {
-      // Assuming handleCheckInError returns an object with a 'status' and 'message' property
+    }
+
+    // Check if employee exists
+    const employee = await Employee.findOne(body.employee_id);
+    if (!employee) {
       return {
-        status: result.status,
-        message: result.message,
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Invalid employee ID.',
       };
+    }
+
+    // Process check-in error
+    try {
+      const result = await this.attendanceService.processCheckInError(body.employee_id);
+      return {
+        statusCode: result.statusCode,
+        error_message: result.message,
+        retry_option: true,
+        contact_support_option: true,
+      };
+    } catch (error) {
+      return this.errorUtil.handleCheckInError(body.employee_id);
     }
   }
 }
