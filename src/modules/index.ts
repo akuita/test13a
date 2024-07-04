@@ -1,4 +1,4 @@
 import { HealthCheckModule } from './health-check/health-check.module';
-import { SystemTimeModule } from './system-time/system-time.module';
+import { EmployeesModule } from './employees/employees.module';
 
-export default [HealthCheckModule, SystemTimeModule];
+export default [HealthCheckModule, EmployeesModule]
