@@ -9,3 +9,10 @@ export function serializeArray<T, O>(transformClass: ClassConstructor<T>, plainA
     plainToClass(transformClass, object, { excludeExtraneousValues: true }),
   )
 }
+
+export function formatDateTime(): string {
+  const now = new Date();
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+  const formattedDateTime = new Intl.DateTimeFormat('default', options).format(now).replace(/\//g, '-').replace(',', '');
+  return formattedDateTime.replace(/(\d{2})-(\d{2})-(\d{4})/, '$3-$1-$2');
+}
